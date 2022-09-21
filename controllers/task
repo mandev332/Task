@@ -1,0 +1,4 @@
+https://for-task-api.herokuapp.com/auth/data_____________POST username,contact
+https://for-task-api.herokuapp.com/auth/login____________POST gmail,password
+https://for-task-api.herokuapp.com/auth/register_________POST username, gmail, password
+https://for-task-api.herokuapp.com/users_________________GET_ all / id

@@ -1,4 +1,4 @@
-let nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 let transporter = nodemailer.createTransport({
   service: "mail.ru",
   auth: {
