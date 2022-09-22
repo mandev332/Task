@@ -1,4 +1,3 @@
-import sha256 from "sha256";
 import express from "express";
 import Userrouter from "../router/users.js";
 import AuthRouter from "../router/auth.js";

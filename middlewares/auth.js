@@ -2,12 +2,13 @@ import jwt from "jsonwebtoken";
 import sha256 from "sha256";
 import { fetch } from "../utils/pg.js";
 import { getUser } from "./userModel.js";
-import nodemailer from "nodemailer";
 
 export default {
   CHECK: async function (req, res, next) {
     try {
+      console.log("userId");
       const { userId, agent } = jwt.verify(req.headers.token, "KEYCODE");
+      console.log(userId);
       if (req["headers"]["user-agent"] != agent)
         throw new Error("You use Fake Token! ");
       req.userId = userId;
@@ -65,26 +66,7 @@ export default {
   },
   REGISTER: async function (req, res, next) {
     try {
-      let { gmail } = req.body;
       checkData(req.body);
-      let transporter = nodemailer.createTransport({
-        service: "mail.ru",
-        auth: {
-          user: "nodir.bek.2023@mail.ru",
-          pass: "2Q8MpwfU14bzj9wxa4zk",
-        },
-      });
-      const mailOptions = {
-        from: "nodir.bek.2023@mail.ru",
-        to: gmail,
-        subject: "Parolingiz",
-        text: Math.random(1000, 10000) + "a",
-      };
-      transporter.sendMail(mailOptions, function (err, info) {
-        if (err) console.log(err);
-        else console.log(info);
-      });
-
       return next();
     } catch (err) {
       res.json({

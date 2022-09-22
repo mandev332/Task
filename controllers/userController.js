@@ -39,7 +39,7 @@ export default {
         username,
         gmail = "alim@mal.com",
         password = "aaa111",
-        contact,
+        contact = "94" + parseInt(Math.random() * 10000000),
       } = req.body;
       let [postuser] = await fetch(
         postUser,
