@@ -12,7 +12,7 @@ export default {
   GET: async function (req, res) {
     try {
       let userId = req.userId;
-      let users = await fetch(getUser + " where user_id = " + userId);
+      let users = await fetch(getUser + " where id = " + userId);
       if (!users.length) {
         return res.json({
           status: 400,
@@ -53,7 +53,7 @@ export default {
         message: "Add new user!",
         data: {
           token: jwt.sign(
-            { userId: postuser.user_id, agent: req["headers"]["user-agent"] },
+            { userId: postuser.id, agent: req["headers"]["user-agent"] },
             "KEYCODE"
           ),
         },
@@ -68,12 +68,14 @@ export default {
   },
   PUT: async function (req, res) {
     try {
+      console.log(req.body);
       let { username, gmail, password, contact } = req.body;
       let id = req.userId;
-      if (!id) {
+
+      if (!id && !gmail) {
         return res.json({
           status: 402,
-          message: "You must send 'user_id'",
+          message: "You must send 'id' or 'gmail'!",
           data: [],
         });
       }
@@ -85,17 +87,19 @@ export default {
           data: [],
         });
       }
-      let [user] = await fetch(getUser + " where user_id = " + id);
+      let [user] = await fetch(
+        getUser + (id ? " where id = " + id : ` where gmail = '${gmail}'`)
+      );
       if (!user) {
         return res.json({
           status: 400,
-          message: id + " - user not found",
+          message: id || gmail + " - user not found",
           data: [],
         });
       }
       let [putuser] = await fetch(
         putUser,
-        id,
+        id ?? user.id,
         username ?? user.username,
         gmail ?? user.gmail,
         password ? sha256(password) : user.password,
@@ -103,12 +107,13 @@ export default {
       );
       res.json({
         status: 200,
-        message: id + " - update user!",
+        message: user.id + " - update user!",
         data: {
           token: jwt.sign(
             { userId: putuser.id, agent: req["headers"]["user-agent"] },
             "KEYCODE"
           ),
+          code: req.body.password,
         },
       });
     } catch (err) {
@@ -124,7 +129,7 @@ export default {
     if (!id) {
       return res.json({
         status: 402,
-        message: "You must send 'user_id'",
+        message: "You must send 'id'",
         data: [],
       });
     }

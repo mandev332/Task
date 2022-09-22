@@ -6,9 +6,7 @@ import { getUser } from "./userModel.js";
 export default {
   CHECK: async function (req, res, next) {
     try {
-      console.log("userId");
       const { userId, agent } = jwt.verify(req.headers.token, "KEYCODE");
-      console.log(userId);
       if (req["headers"]["user-agent"] != agent)
         throw new Error("You use Fake Token! ");
       req.userId = userId;
